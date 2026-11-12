@@ -1,5 +1,5 @@
 const http = require('node:http'), fs = require('node:fs'), path = require('node:path');
-const files = {'/':['index.html','text/html'], '/style.css':['style.css','text/css'], '/app.js':['app.js','text/javascript'], '/speedtest.mjs':['speedtest.mjs','text/javascript']};
+const files = {'/':['index.html','text/html'], '/style.css':['style.css','text/css'], '/app.js':['app.js','text/javascript'], '/core.mjs':['core.mjs','text/javascript'], '/speedtest.mjs':['speedtest.mjs','text/javascript']};
 http.createServer((req,res)=>{
   const url = new URL(req.url,'http://localhost').pathname;
   if(url==='/health'){res.writeHead(200,{'Content-Type':'text/plain'}); return res.end('ok')}
