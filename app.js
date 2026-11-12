@@ -2,9 +2,9 @@ import {questions,extraQuestions,tieQuestions,scoreAnswers,zodiacFor,typeNotes} 
 const $=id=>document.getElementById(id);
 const month=$('birth-month'),day=$('birth-day');
 for(let i=1;i<=12;i++){const o=document.createElement('option');o.value=i;o.textContent=i+' 月';month.append(o)}
-function populateDays(){const selected=Number(day.value);const max=month.value?[31,29,31,30,31,30,31,31,30,31,30,31][Number(month.value)-1]:31;day.replaceChildren(new Option('选择日期',''));for(let i=1;i<=max;i++)day.add(new Option(i+' 日',String(i)));if(selected<=max)day.value=String(selected)}
+function populateDays(){const selected=Number(day.value);const max=month.value?[31,29,31,30,31,30,31,31,30,31,30,31][Number(month.value)-1]:31;day.replaceChildren(new Option('选择日期',''));for(let i=1;i<=max;i++)day.add(new Option(i+' 日',String(i)));if(selected>=1&&selected<=max)day.value=String(selected)}
 month.addEventListener('change',populateDays);populateDays();
-$('zodiac-form').addEventListener('submit',event=>{event.preventDefault();if(!month.value||!day.value)return;try{const sign=zodiacFor(Number(month.value),Number(day.value));$('zodiac-empty').hidden=true;$('zodiac-output').hidden=false;$('zodiac-symbol').textContent=sign.symbol;$('zodiac-en').textContent=sign.en;$('zodiac-name').textContent=sign.name;$('zodiac-range').textContent=sign.range+'  ·  '+sign.element;$('zodiac-keywords').textContent=sign.keywords;$('zodiac-description').textContent=sign.description}catch(error){day.setCustomValidity('请选择有效日期');day.reportValidity()}});
+$('zodiac-form').addEventListener('submit',event=>{event.preventDefault();if(!month.value||!day.value)return;try{const sign=zodiacFor(Number(month.value),Number(day.value));$('zodiac-empty').hidden=true;$('zodiac-output').hidden=false;$('zodiac-symbol').textContent=sign.symbol+'\uFE0E';$('zodiac-en').textContent=sign.en;$('zodiac-name').textContent=sign.name;$('zodiac-range').textContent=sign.range+'  ·  '+sign.element;$('zodiac-keywords').textContent=sign.keywords;$('zodiac-description').textContent=sign.description}catch(error){day.setCustomValidity('请选择有效日期');day.reportValidity()}});
 day.addEventListener('change',()=>day.setCustomValidity(''));
 let baseItems=questions,items=questions,answers=Array(items.length).fill(null),index=0;
 const dimensionNames={EI:['外向','内向'],SN:['实感','直觉'],TF:['思考','情感'],JP:['判断','知觉']};
@@ -15,7 +15,7 @@ function result(){const data=scoreAnswers(answers,items),profile=typeNotes[data.
 function answer(n){answers[index]=n;
  if(index===baseItems.length-1){const baseAnswers=answers.slice(0,baseItems.length);const ties=scoreAnswers(baseAnswers,baseItems).dimensions.filter(d=>d.letter==='X');items=[...baseItems,...ties.map(d=>tieQuestions[d.pair])];answers=[...baseAnswers,...Array(ties.length).fill(null)]}
  if(index===items.length-1)result();else{index++;question()}}
-function begin(long){baseItems=long?[...questions,...extraQuestions]:questions;items=baseItems;answers=Array(items.length).fill(null);index=0;question()}
+function begin(long){baseItems=long?[...questions,...extraQuestions]:questions;items=baseItems;answers=Array(items.length).fill(null);index=0;question();document.querySelector('.quiz-panel').scrollIntoView({behavior:'smooth',block:'start'})}
 $('quiz-short').addEventListener('click',()=>begin(false));$('quiz-long').addEventListener('click',()=>begin(true));
 $('answer-a').addEventListener('click',()=>answer(0));$('answer-b').addEventListener('click',()=>answer(1));
 $('quiz-back').addEventListener('click',()=>{if(index>0){index--;question()}});
