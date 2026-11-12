@@ -1,0 +1,9 @@
+services:
+  - type: web
+    name: free-web-starter
+    runtime: node
+    plan: free
+    buildCommand: npm install
+    startCommand: npm start
+    healthCheckPath: /health
+
